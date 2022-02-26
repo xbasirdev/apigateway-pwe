@@ -8,7 +8,7 @@ use App\Traits\RequestService;
 
 use function config;
 
-class ProductService
+class EventoService
 {
     use RequestService;
 
@@ -23,7 +23,7 @@ class ProductService
     protected $secret;
 
     /**
-     * ProductService constructor.
+     * eventoService constructor.
      */
     public function __construct()
     {
@@ -34,19 +34,19 @@ class ProductService
     /**
      * @return string
      */
-    public function fetchProducts() : string
+    public function fetchEventos() : string
     {
-        return $this->request('GET', '/api/product');
+        return $this->request('GET', '/api/evento');
     }
 
     /**
-     * @param $product
+     * @param $evento
      *
      * @return string
      */
-    public function fetchProduct($product) : string
+    public function fetchEvento($evento) : string
     {
-        return $this->request('GET', "/api/product/{$product}");
+        return $this->request('GET', "/api/evento/{$evento}");
     }
 
     /**
@@ -54,29 +54,29 @@ class ProductService
      *
      * @return string
      */
-    public function createProduct($data) : string
+    public function createEvento($data) : string
     {
-        return $this->request('POST', '/api/product', $data);
+        return $this->request('POST', '/api/evento', $data);
     }
 
     /**
-     * @param $product
+     * @param $evento
      * @param $data
      *
      * @return string
      */
-    public function updateProduct($product, $data) : string
+    public function updateEvento($evento, $data) : string
     {
-        return $this->request('PATCH', "/api/product/{$product}", $data);
+        return $this->request('PATCH', "/api/evento/{$evento}", $data);
     }
 
     /**
-     * @param $product
+     * @param $evento
      *
      * @return string
      */
-    public function deleteProduct($product) : string
+    public function deleteEvento($evento) : string
     {
-        return $this->request('DELETE', "/api/product/{$product}");
+        return $this->request('DELETE', "/api/evento/{$evento}");
     }
 }

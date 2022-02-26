@@ -3,16 +3,12 @@
 declare(strict_types = 1);
 
 return [
-    'products' => [
-        'base_uri' => env('PRODUCTS_SERVICE_BASE_URI'),
-        'secret' => env('PRODUCTS_SERVICE_SECRET')
+    'pwe' => [
+        'base_uri' => env('PWE_SERVICE_BASE_URI'),
+        'secret' => env('PWE_SERVICE_SECRET')
     ],
-    'orders' => [
-        'base_uri' => env('ORDERS_SERVICE_BASE_URI'),
-        'secret' => env('ORDERS_SERVICE_SECRET'),
-    ],
-    'entries' => [
-        'base_uri' => env('ENTRIES_SERVICE_BASE_URI'),
-        'secret' => env('ENTRIES_SERVICE_SECRET'),
+    'pew_statistics' => [
+        'base_uri' => env('PWE_STATISTICS_SERVICE_BASE_URI'),
+        'secret' => env('PWE_STATISTICS_SECRET'),
     ]
 ];
