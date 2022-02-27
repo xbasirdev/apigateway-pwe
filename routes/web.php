@@ -54,6 +54,38 @@ $router->group(['prefix' => 'api'], function () use ($router) {
         $router->delete('/{actividadExtension}', ['uses' => 'ActividadExtensionController@destroy']);
     });
 
+    $router->group(['prefix' => 'carrera'], function () use ($router) {
+        $router->get('/', ['uses' => 'CarreraController@index']);
+        $router->post('/', ['uses' => 'CarreraController@store']);
+        $router->get('/{carrera}', ['uses' => 'CarreraController@show']);
+        $router->patch('/{carrera}', ['uses' => 'CarreraController@update']);
+        $router->delete('/{carrera}', ['uses' => 'CarreraController@destroy']);
+    });
+
+    $router->group(['prefix' => 'bolsaTrabajo'], function () use ($router) {
+        $router->get('/', ['uses' => 'BolsaTrabajoController@index']);
+        $router->post('/', ['uses' => 'BolsaTrabajoController@store']);
+        $router->get('/{bolsaTrabajo}', ['uses' => 'BolsaTrabajoController@show']);
+        $router->patch('/{bolsaTrabajo}', ['uses' => 'BolsaTrabajoController@update']);
+        $router->delete('/{bolsaTrabajo}', ['uses' => 'BolsaTrabajoController@destroy']);
+    });
+
+    $router->group(['prefix' => 'egresado'], function () use ($router) {
+        $router->get('/', ['uses' => 'EgresadoController@index']);
+        $router->post('/', ['uses' => 'EgresadoController@store']);
+        $router->get('/{egresado}', ['uses' => 'EgresadoController@show']);
+        $router->patch('/{egresado}', ['uses' => 'EgresadoController@update']);
+        $router->delete('/{egresado}', ['uses' => 'EgresadoController@destroy']);
+    });
+
+    $router->group(['prefix' => 'bolsaEgresado'], function () use ($router) {
+        $router->get('/', ['uses' => 'BolsaEgresadoController@index']);
+        $router->post('/', ['uses' => 'BolsaEgresadoController@store']);
+        $router->get('/{bolsaEgresado}', ['uses' => 'BolsaEgresadoController@show']);
+        $router->patch('/{bolsaEgresado}', ['uses' => 'BolsaEgresadoController@update']);
+        $router->delete('/{bolsaEgresado}', ['uses' => 'BolsaEgresadoController@destroy']);
+    });
+
     $router->group(['prefix' => 'entry'], function () use ($router) {
         $router->get('/', ['uses' => 'EntryController@index']);
     });
