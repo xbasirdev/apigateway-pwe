@@ -86,6 +86,14 @@ $router->group(['prefix' => 'api'], function () use ($router) {
         $router->delete('/{bolsaEgresado}', ['uses' => 'BolsaEgresadoController@destroy']);
     });
 
+    $router->group(['prefix' => 'cuestionario'], function () use ($router) {
+        $router->get('/', ['uses' => 'CuestionarioController@index']);
+        $router->post('/', ['uses' => 'CuestionarioController@store']);
+        $router->get('/{cuestionario}', ['uses' => 'CuestionarioController@show']);
+        $router->patch('/{cuestionario}', ['uses' => 'CuestionarioController@update']);
+        $router->delete('/{cuestionario}', ['uses' => 'CuestionarioController@destroy']);
+    });
+
     $router->group(['prefix' => 'entry'], function () use ($router) {
         $router->get('/', ['uses' => 'EntryController@index']);
     });
