@@ -1,10 +1,9 @@
 <?php
 
-declare(strict_types = 1);
+declare (strict_types = 1);
 
 namespace App\Providers;
 
-use Dusterio\LumenPassport\LumenPassport;
 use Illuminate\Support\ServiceProvider;
 
 class AuthServiceProvider extends ServiceProvider
@@ -16,6 +15,7 @@ class AuthServiceProvider extends ServiceProvider
      */
     public function register()
     {
+
     }
 
     /**
@@ -36,6 +36,6 @@ class AuthServiceProvider extends ServiceProvider
         // should return either a User instance or null. You're free to obtain
         // the User instance via an API token or any other method necessary.
 
-        LumenPassport::routes($this->app->router);
+        //LumenPassport::routes($this->app->router);
     }
 }

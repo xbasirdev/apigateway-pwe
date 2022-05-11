@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types = 1);
+declare (strict_types = 1);
 
 return [
     'defaults' => [
@@ -10,7 +10,7 @@ return [
 
     'guards' => [
         'api' => [
-            'driver' => 'passport',
+            'driver' => 'jwt',
             'provider' => 'users',
         ],
     ],
@@ -18,7 +18,7 @@ return [
     'providers' => [
         'users' => [
             'driver' => 'eloquent',
-            'model' => \App\User::class
-        ]
-    ]
+            'model' => \App\Models\User::class,
+        ],
+    ],
 ];

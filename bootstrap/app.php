@@ -1,14 +1,14 @@
 <?php
 
-declare(strict_types = 1);
+declare (strict_types = 1);
 
-require_once __DIR__.'/../vendor/autoload.php';
+require_once __DIR__ . '/../vendor/autoload.php';
 
 try {
     (new Laravel\Lumen\Bootstrap\LoadEnvironmentVariables(
         dirname(__DIR__)
     ))->bootstrap();
-} catch (Dotenv\Exception\InvalidPathException $e) {
+} catch (Dotenv\Exception\InvalidPathException$e) {
     //
 }
 
@@ -21,19 +21,21 @@ try {
 | that serves as the central piece of this framework. We'll use this
 | application as an "IoC" container and router for this framework.
 |
-*/
+ */
 
 $app = new Laravel\Lumen\Application(
     dirname(__DIR__)
 );
 
- $app->withFacades();
+$app->withFacades();
 
- $app->withEloquent();
+$app->withEloquent();
 
-
- $app->configure('services');
- $app->configure('auth');
+// Register config
+$app->configure('app');
+$app->configure('auth');
+$app->configure('jwt');
+$app->configure('services');
 
 /*
 |--------------------------------------------------------------------------
@@ -44,7 +46,7 @@ $app = new Laravel\Lumen\Application(
 | register the exception handler and the console kernel. You may add
 | your own bindings here if you like or you can make another file.
 |
-*/
+ */
 
 $app->singleton(
     Illuminate\Contracts\Debug\ExceptionHandler::class,
@@ -65,22 +67,21 @@ $app->singleton(
 | be global middleware that run before and after each request into a
 | route or middleware that'll be assigned to some specific routes.
 |
-*/
+ */
 
 // $app->middleware([
 //     App\Http\Middleware\ExampleMiddleware::class
 // ]);
 
- $app->routeMiddleware([
-     'auth' => App\Http\Middleware\Authenticate::class,
-     'client.credentials' => \Laravel\Passport\Http\Middleware\CheckClientCredentials::class
- ]);
-
- $app->middleware([
-	'Vluzrmos\LumenCors\CorsMiddleware'
+$app->routeMiddleware([
+    'throttle' => App\Http\Middleware\ThrottleRequests::class,
+    'auth' => App\Http\Middleware\Authenticate::class,
+    //  'client.credentials' => \Laravel\Passport\Http\Middleware\CheckClientCredentials::class,
 ]);
 
-
+$app->middleware([
+    'Vluzrmos\LumenCors\CorsMiddleware',
+]);
 
 /*
 |--------------------------------------------------------------------------
@@ -91,16 +92,21 @@ $app->singleton(
 | are used to bind services into the container. Service providers are
 | totally optional, so you are not required to uncomment this line.
 |
-*/
+ */
 
 // $app->register(App\Providers\AppServiceProvider::class);
- $app->register(App\Providers\AuthServiceProvider::class);
 // $app->register(App\Providers\EventServiceProvider::class);
+//$app->register(App\Providers\AuthServiceProvider::class);
 
+//$app->register(Laravel\Passport\PassportServiceProvider::class);
+//$app->register(Dusterio\LumenPassport\PassportServiceProvider::class);
+$app->register(App\Providers\AuthServiceProvider::class);
+$app->register(Tymon\JWTAuth\Providers\LumenServiceProvider::class);
 
-$app->register(Laravel\Passport\PassportServiceProvider::class);
-$app->register(Dusterio\LumenPassport\PassportServiceProvider::class);
-
+$app->withFacades(true, [
+    Tymon\JWTAuth\Facades\JWTAuth::class => 'JWTAuth',
+    Tymon\JWTAuth\Facades\JWTFactory::class => 'JWTFactory',
+]);
 
 /*
 |--------------------------------------------------------------------------
@@ -111,12 +117,12 @@ $app->register(Dusterio\LumenPassport\PassportServiceProvider::class);
 | the application. This will provide all of the URLs the application
 | can respond to, as well as the controllers that may handle them.
 |
-*/
+ */
 
 $app->router->group([
     'namespace' => 'App\Http\Controllers',
 ], function ($router) {
-    require __DIR__.'/../routes/web.php';
+    require __DIR__ . '/../routes/web.php';
 });
 
 return $app;
