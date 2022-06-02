@@ -27,6 +27,7 @@ class EventoController extends Controller
      */
     public function index()
     {
+        dd('ok');
         return $this->successResponse($this->eventoService->fetchEventos());
     }
 

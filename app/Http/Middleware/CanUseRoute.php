@@ -19,14 +19,18 @@ class CanUseRoute
     {
         $user =  $request->user() ?? auth('api')->user();
         
-        if ($user->hasRole('administrator') || $user->can('route:' . $request->route()->getName())) {
-            return $next($request);
+        if(!empty($request->route()[1]["as"])){
+            $routeName=$request->route()[1]["as"];
+            $permission = 'route:' . $routeName;
+            if ($user->hasRole('administrator') || $user->can($permission) || $user->hasPermission($permission)) {
+                return $next($request);
+            }
+    
+            if (Permission::where('slug', $permission)->first()->is_hidden ?? false) {
+                return $next($request);
+            }
+            
         }
-
-        if (Permission::where('slug', 'route:' . $request->route()->getName())->first()->is_hidden ?? false) {
-            return $next($request);
-        }
-
         abort(403);
 
     }

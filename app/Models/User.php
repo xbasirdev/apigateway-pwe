@@ -55,7 +55,7 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
      */
     public function roles()
     {
-        return $this->belongsToMany(Role::class, UserHasRoles::class);
+        return $this->belongsToMany(Role::class);
     }
 
     /**
@@ -65,7 +65,7 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
      */
     public function permissions()
     {
-        return $this->belongsToMany(Permission::class, UserHasPermission::class);
+        return $this->belongsToMany(Permission::class);
     }
     
     //Determinar si el usuario tiene un role especifico

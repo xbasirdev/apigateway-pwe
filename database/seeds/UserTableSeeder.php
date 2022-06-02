@@ -4,6 +4,7 @@ declare (strict_types = 1);
 
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
+use App\Models\User;
 
 class UserTableSeeder extends Seeder
 {
@@ -14,15 +15,16 @@ class UserTableSeeder extends Seeder
      */
     public function run()
     {
-        \App\Models\User::firstOrCreate(['email' => 'admin@gmail.com'], [
+        User::firstOrCreate(['email' => 'admin@gmail.com'], [
             'name' => 'admin',
             'email' => 'admin@gmail.com',
             'password' => Hash::make('123456'),
-        ]);
-        \App\Models\User::firstOrCreate(['email' => 'graduate@gmail.com'], [
+        ])->assignRole("administrator");
+        
+        User::firstOrCreate(['email' => 'graduate@gmail.com'], [
             'name' => 'graduate',
             'email' => 'graduate@gmail.com',
             'password' => Hash::make('123456'),
-        ]);
+        ])->assignRole("graduate");
     }
 }
