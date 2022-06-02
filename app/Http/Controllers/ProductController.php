@@ -27,6 +27,7 @@ class ProductController extends Controller
      */
     public function index()
     {
+        return "ok";
         return $this->successResponse($this->productService->fetchProducts());
     }
 

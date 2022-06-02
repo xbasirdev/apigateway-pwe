@@ -14,9 +14,14 @@ class UserTableSeeder extends Seeder
      */
     public function run()
     {
-        \App\Models\User::firstOrCreate(['email' => 'user1@gmail.com'], [
-            'name' => 'user1',
-            'email' => 'user1@gmail.com',
+        \App\Models\User::firstOrCreate(['email' => 'admin@gmail.com'], [
+            'name' => 'admin',
+            'email' => 'admin@gmail.com',
+            'password' => Hash::make('123456'),
+        ]);
+        \App\Models\User::firstOrCreate(['email' => 'graduate@gmail.com'], [
+            'name' => 'graduate',
+            'email' => 'graduate@gmail.com',
             'password' => Hash::make('123456'),
         ]);
     }

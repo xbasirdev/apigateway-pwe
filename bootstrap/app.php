@@ -76,6 +76,9 @@ $app->singleton(
 $app->routeMiddleware([
     'throttle' => App\Http\Middleware\ThrottleRequests::class,
     'auth' => App\Http\Middleware\Authenticate::class,
+    'auth.jwt' => \Tymon\JWTAuth\Http\Middleware\Authenticate::class,
+    'can' => Illuminate\Auth\Middleware\Authorize::class,
+    'can_use_route' => App\Http\Middleware\CanUseRoute::class,
     //  'client.credentials' => \Laravel\Passport\Http\Middleware\CheckClientCredentials::class,
 ]);
 

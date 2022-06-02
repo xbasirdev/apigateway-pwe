@@ -14,6 +14,8 @@ class DatabaseSeeder extends Seeder
     public function run()
     {
         // \Illuminate\Support\Facades\Artisan::call('passport:install');
+        $this->call(RoleTableSeeder::class);
+        $this->call(RolePermissionTableSeeder::class);
         $this->call(UserTableSeeder::class);
     }
 }

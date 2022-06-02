@@ -6,20 +6,21 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class AddUsersTable extends Migration
+class CreateRolesTable extends Migration
 {
     /**
      * Run the migrations.
      *
      * @return void
      */
-    public function up(): void
+    public function up()
     {
-        Schema::create('users', function (Blueprint $table) {
+        Schema::create('roles', function (Blueprint $table) {
             $table->increments('id');
-            $table->string('name', 256);
-            $table->string('email', 256);
-            $table->string('password', 512);
+            $table->string('name');
+            $table->string('slug');
+            $table->text('description')->nullable();
+            $table->softDeletes();
             $table->timestamps();
         });
     }
@@ -29,8 +30,8 @@ class AddUsersTable extends Migration
      *
      * @return void
      */
-    public function down(): void
+    public function down()
     {
-        Schema::dropIfExists('users');
+        Schema::dropIfExists('roles');
     }
 }
