@@ -5,8 +5,11 @@ namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
 use App\Models\User;
+use App\Models\Role;
+use App\Models\RoleUser;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Validator;
 
 class AuthController extends Controller
@@ -42,7 +45,14 @@ class AuthController extends Controller
             return response()->json(['error' => 'Unauthorized'], 401);
         }
 
-        return $this->respondWithToken($token);
+        $user = User::where('email', $request->email)->first();
+        // $roleUser = RoleUser::where('user_id', $user->id)->first();
+        $roleUser = \DB::table('role_user')
+                ->where('user_id',$user->id)
+                ->first();
+        $user->role = $roleUser->role_id;
+
+        return $this->respondWithTokenAndUser($token, $user, $roleUser);
     }
 
     /**
@@ -91,6 +101,17 @@ class AuthController extends Controller
             'access_token' => $token,
             'token_type' => 'bearer',
             'expires_in' => Auth::guard('api')->factory()->getTTL() * 60,
+        ]);
+    }
+
+    protected function respondWithTokenAndUser($token, $user, $role)
+    {
+        return response()->json([
+            'access_token' => $token,
+            'token_type' => 'bearer',
+            'expires_in' => Auth::guard('api')->factory()->getTTL() * 60,
+            'user' => $user,
+            'role' => $role,
         ]);
     }
 }
