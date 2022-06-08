@@ -116,6 +116,10 @@ $router->group(['prefix' => 'api', 'middleware' => ['auth.jwt', 'can_use_route']
         $router->delete('/{cuestionario}', ['as' => 'destroy', 'uses' => 'CuestionarioController@destroy']);
     });
 
+    $router->group(['prefix' => 'objetivoCuestionario', "as" => "objetivoCuestionario"], function () use ($router) {
+        $router->get('/{cuestionario}', ['as' => 'show', 'uses' => 'ObjetivoController@show']);
+    });
+
     $router->group(['prefix' => 'entry', "as" => "entry"], function () use ($router) {
         $router->get('/', ['as' => 'index', 'uses' => 'EntryController@index']);
     });
