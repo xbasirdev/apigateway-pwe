@@ -116,6 +116,15 @@ $router->group(['prefix' => 'api', 'middleware' => ['auth.jwt', 'can_use_route']
         $router->delete('/{cuestionario}', ['as' => 'destroy', 'uses' => 'CuestionarioController@destroy']);
     });
 
+    $router->group(['prefix' => 'banco', "as" => "banco"], function () use ($router) {
+        $router->get('/', ['as' => 'index', 'uses' => 'BancoController@index']);
+        $router->post('/', ['as' => 'store', 'uses' => 'BancoController@store']);
+        $router->get('/{banco}', ['as' => 'show', 'uses' => 'BancoController@show']);
+        $router->patch('/{banco}', ['as' => 'update', 'uses' => 'BancoController@update']);
+        $router->delete('/{banco}', ['as' => 'destroy', 'uses' => 'BancoController@destroy']);
+    });
+
+
     $router->group(['prefix' => 'objetivoCuestionario', "as" => "objetivoCuestionario"], function () use ($router) {
         $router->get('/{cuestionario}', ['as' => 'show', 'uses' => 'ObjetivoController@show']);
     });
