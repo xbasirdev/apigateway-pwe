@@ -5,23 +5,51 @@ namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
 use App\Models\User;
+use Illuminate\Support\Facades\Hash;
 use App\Models\Role;
 use App\Models\RoleUser;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use App\Services\EventoService;
+use App\Services\UserService;
 use Validator;
 
 class AuthController extends Controller
 {
+    private $userService;
     /**
      * Create a new AuthController instance.
      *
      * @return void
      */
-    public function __construct()
+    public function __construct(userService $userService)
     {
-        $this->middleware('auth:api', ['except' => ['login']]);
+        $this->userService = $userService;
+        $this->middleware('auth:api', ['except' => ['login', 'register']]);
+    }
+
+    public function register(Request $request)
+    {
+        $rules = [
+                'correo' => 'required|email|unique:users,email',
+                'password' => 'required|string',
+                'password_confirm' => 'required|same:password|string',
+        ];
+
+        $this->validate($request, $rules);
+
+        $userService = $this->userService->createUser($request->all());
+
+        if(!empty($userService)){
+            $user = User::create([
+                'name' => $request->nombres ." ". $request->apellidos,
+                'email'=> $request->correo,
+                'password'=> Hash::make($request->password),
+            ]);
+        }
+        
+       return $this->successResponse($user);
     }
 
     /**
@@ -31,28 +59,22 @@ class AuthController extends Controller
      */
     public function login(Request $request)
     {
-        $credentials = ['email' => $request->email, 'password' => $request->password];
-        $validator = Validator::make($request->all(), [
+        $rules = [
             'email' => 'required|email',
             'password' => 'required|string|min:6',
-        ]);
+        ];
 
-        if ($validator->fails()) {
-            return response()->json($validator->errors(), 422);
-        }
-
+        $this->validate($request, $rules);
+        
+        $credentials = ['email' => $request->email, 'password' => $request->password];
+        
         if (!$token = Auth::guard('api')->attempt($credentials)) {
             return response()->json(['error' => 'Unauthorized'], 401);
         }
 
         $user = User::where('email', $request->email)->first();
-        // $roleUser = RoleUser::where('user_id', $user->id)->first();
-        $roleUser = \DB::table('role_user')
-                ->where('user_id',$user->id)
-                ->first();
-        $user->role = $roleUser->role_id;
-
-        return $this->respondWithTokenAndUser($token, $user, $roleUser);
+        
+        return $this->respondWithTokenAndUser($token, $user, $user->roles);
     }
 
     /**
@@ -60,6 +82,7 @@ class AuthController extends Controller
      *
      * @return \Illuminate\Http\JsonResponse
      */
+    
     public function me()
     {
         return response()->json(Auth::guard('api')->user());

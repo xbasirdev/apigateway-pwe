@@ -121,6 +121,7 @@ $app->withFacades(true, [
 | can respond to, as well as the controllers that may handle them.
 |
  */
+app('translator')->setLocale('es');
 
 $app->router->group([
     'namespace' => 'App\Http\Controllers',

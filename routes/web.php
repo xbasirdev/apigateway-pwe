@@ -29,6 +29,7 @@ declare (strict_types = 1);
     });
    
  $router->group(['prefix' => 'api/auth', "as" => "auth"], function ($router) {
+        $router->post('register', ['as' => 'register', 'uses' => 'AuthController@register']);
         $router->post('login', ['as' => 'login', 'uses' => 'AuthController@login']);
         $router->post('logout', ['as' => 'logout', 'uses' => 'AuthController@logout']);
         $router->post('refresh', ['as' => 'refresh', 'uses' => 'AuthController@refresh']);
