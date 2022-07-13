@@ -34,7 +34,9 @@ declare (strict_types = 1);
         $router->post('logout', ['as' => 'logout', 'uses' => 'AuthController@logout']);
         $router->post('refresh', ['as' => 'refresh', 'uses' => 'AuthController@refresh']);
         $router->post('me', ['as' => 'me', 'uses' => 'AuthController@me']);
-    });
+        $router->post('forgot-password', ['as' => 'forgot-password', 'uses' => 'AuthController@forgotPassword']);
+        $router->post('reset-password', ['as' => 'reset-password', 'uses' => 'AuthController@resetPassword']);
+});
     
 $router->group(['prefix' => 'api', 'middleware' => ['auth.jwt', 'can_use_route']], function () use ($router) {
    

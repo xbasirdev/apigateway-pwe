@@ -36,6 +36,16 @@ $app->configure('app');
 $app->configure('auth');
 $app->configure('jwt');
 $app->configure('services');
+$app->configure('mail');
+
+$app->alias('mail.manager', Illuminate\Mail\MailManager::class);
+$app->alias('mail.manager', Illuminate\Contracts\Mail\Factory::class);
+
+$app->alias('mailer', Illuminate\Mail\Mailer::class);
+$app->alias('mailer', Illuminate\Contracts\Mail\Mailer::class);
+$app->alias('mailer', Illuminate\Contracts\Mail\MailQueue::class);
+class_alias(Tymon\JWTAuth\Facades\JWTAuth::class, 'JWTAuth');
+class_alias(Tymon\JWTAuth\Facades\JWTFactory::class, 'JWTFactory');
 
 /*
 |--------------------------------------------------------------------------
@@ -97,18 +107,21 @@ $app->middleware([
 |
  */
 
-// $app->register(App\Providers\AppServiceProvider::class);
-// $app->register(App\Providers\EventServiceProvider::class);
+ $app->register(App\Providers\AppServiceProvider::class);
+ $app->register(App\Providers\EventServiceProvider::class);
 //$app->register(App\Providers\AuthServiceProvider::class);
 
 //$app->register(Laravel\Passport\PassportServiceProvider::class);
 //$app->register(Dusterio\LumenPassport\PassportServiceProvider::class);
 $app->register(App\Providers\AuthServiceProvider::class);
 $app->register(Tymon\JWTAuth\Providers\LumenServiceProvider::class);
+$app->register(Illuminate\Mail\MailServiceProvider::class);
+$app->register(Illuminate\Notifications\NotificationServiceProvider::class);
 
 $app->withFacades(true, [
     Tymon\JWTAuth\Facades\JWTAuth::class => 'JWTAuth',
     Tymon\JWTAuth\Facades\JWTFactory::class => 'JWTFactory',
+    Illuminate\Support\Facades\Notification::class => "Notification"
 ]);
 
 /*

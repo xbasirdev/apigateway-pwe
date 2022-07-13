@@ -6,6 +6,8 @@ namespace App\Http\Controllers;
 use App\Http\Controllers\Controller;
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
+use App\Events\ForgotPasswordEvent;
+use App\Events\PasswordResetEvent;
 use App\Models\Role;
 use App\Models\RoleUser;
 use Illuminate\Http\Request;
@@ -14,6 +16,10 @@ use Illuminate\Support\Facades\DB;
 use App\Services\EventoService;
 use App\Services\UserService;
 use Validator;
+use Carbon\Carbon;
+use Illuminate\Support\Facades\Password;
+use JWT;
+use JWTAuth;
 
 class AuthController extends Controller
 {
@@ -26,7 +32,7 @@ class AuthController extends Controller
     public function __construct(userService $userService)
     {
         $this->userService = $userService;
-        $this->middleware('auth:api', ['except' => ['login', 'register']]);
+        $this->middleware('auth:api', ['only' => ['me', 'logout', "refresh"]]);
     }
 
     public function register(Request $request)
@@ -136,5 +142,72 @@ class AuthController extends Controller
             'user' => $user,
             'role' => $role,
         ]);
+    }
+    public function forgotPassword(Request $request)
+    {
+        $rules = [
+            'email' => 'required|string|email|max:255|exists:users,email',
+            "url"=>"required|url"
+        ];
+        
+        $this->validate($request, $rules);
+        
+        $user = User::where('email', $request->email)->first();
+        
+        try {
+            if (!$token = JWTAuth::fromUser($user)) {
+                return response()->json(['error' => 'invalid_credentials'], 401);
+            }
+        } catch (JWTException $e) {
+            return response()->json(['error' => 'could_not_create_token'], 500);
+        }
+
+        $t = JWTAuth::setToken($token);
+        $url = $request->url."?token=". $token;
+        $value = JWTAuth::setToken($token)->getPayload()->get('exp');
+        $expiration = Carbon::parse($value)->format('d-m-y H:i') . " UTC";
+        
+        try {
+            event(new ForgotPasswordEvent($user, $url, $expiration));
+        } catch (\Throwable$th) {
+            return response()->json(['error' => __("Failed to send password recovery email, try later")], 401);
+        }
+        return response()->json(['message' => __("recovery of sent password")]);
+    }
+
+    public function resetPassword(Request $request)
+    {
+        $rules = [
+            'password' => 'required|string',
+            'password_confirmation' => 'required|same:password|string',
+            "token_reset"=>"required"
+        ];        
+
+        $this->validate($request, $rules);
+
+        try {
+            JWTAuth::setToken($request->token_reset);
+            $token = JWTAuth::getToken();
+            $user = JWTAuth::toUser($token);
+        } catch (\Throwable$th) {
+            return response()->json(['error' => __("Token has expired")], 401);
+        }
+        if (User::where("id", $user->id)->exists()) {
+            $user->update([
+                'password' =>  Hash::make($request->password),
+            ]);
+            JWTAuth::invalidate($token);
+            try {
+                event(new PasswordResetEvent($user));
+            } catch (\Throwable$th) {
+
+            }
+            $credentials = ["email" => $user->email, "password" => $request->password];
+            $token = Auth::guard('api')->attempt($credentials);
+            return $this->respondWithTokenAndUser($token, $user, $user->roles);
+        } else {
+            JWTAuth::invalidate($token);
+            return response()->json(['error' => __("The user does not exist")], 401);
+        }
     }
 }
