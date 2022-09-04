@@ -14,28 +14,29 @@ declare (strict_types = 1);
  */
 //$router->group(['prefix' => 'api', 'middleware' => ['client.credentials']], function () use ($router) {
 
-    Route::get('/prueba', function () {
-        //rutas que no se evaluan en los permisos
-        $except = ["auth.login", "auth.refresh", "auth.logout"];
-        $routeName = json_encode(Route::getRoutes());
-        foreach (Route::getRoutes() as $key => $value) {
-            if (array_key_exists("as", $value["action"])) {
-                $route = $value["action"]["as"];
-                if(!in_array($route, $except)){
-                    echo $route;
-                }
+Route::get('/prueba', function () {
+    //rutas que no se evaluan en los permisos
+    $except = ["auth.login", "auth.refresh", "auth.logout"];
+    $routeName = json_encode(Route::getRoutes());
+    foreach (Route::getRoutes() as $key => $value) {
+        if (array_key_exists("as", $value["action"])) {
+            $route = $value["action"]["as"];
+            if(!in_array($route, $except)){
+                echo $route;
             }
         }
-    });
+    }
+});
    
- $router->group(['prefix' => 'api/auth', "as" => "auth"], function ($router) {
-        $router->post('register', ['as' => 'register', 'uses' => 'AuthController@register']);
-        $router->post('login', ['as' => 'login', 'uses' => 'AuthController@login']);
-        $router->post('logout', ['as' => 'logout', 'uses' => 'AuthController@logout']);
-        $router->post('refresh', ['as' => 'refresh', 'uses' => 'AuthController@refresh']);
-        $router->post('me', ['as' => 'me', 'uses' => 'AuthController@me']);
-        $router->post('forgot-password', ['as' => 'forgot-password', 'uses' => 'AuthController@forgotPassword']);
-        $router->post('reset-password', ['as' => 'reset-password', 'uses' => 'AuthController@resetPassword']);
+
+$router->group(['prefix' => 'api/auth', "as" => "auth"], function ($router) {
+    $router->post('register', ['as' => 'register', 'uses' => 'AuthController@register']);
+    $router->post('login', ['as' => 'login', 'uses' => 'AuthController@login']);
+    $router->post('logout', ['as' => 'logout', 'uses' => 'AuthController@logout']);
+    $router->post('refresh', ['as' => 'refresh', 'uses' => 'AuthController@refresh']);
+    $router->post('me', ['as' => 'me', 'uses' => 'AuthController@me']);
+    $router->post('forgot-password', ['as' => 'forgot-password', 'uses' => 'AuthController@forgotPassword']);
+    $router->post('reset-password', ['as' => 'reset-password', 'uses' => 'AuthController@resetPassword']);
 });
     
 $router->group(['prefix' => 'api', 'middleware' => ['auth.jwt', 'can_use_route']], function () use ($router) {
@@ -46,6 +47,17 @@ $router->group(['prefix' => 'api', 'middleware' => ['auth.jwt', 'can_use_route']
         $router->get('/{product}', ['as' => 'show', 'uses' => 'ProductController@show']);
         $router->patch('/{product}', ['as' => 'update', 'uses' => 'ProductController@update']);
         $router->delete('/{product}', ['as' => 'destroy', 'uses' => 'ProductController@destroy']);
+    });
+
+    $router->group(['prefix' => 'user', 'as' => "user"], function () use ($router) {
+        $router->get('/', ['as' => 'index', 'uses' => 'UserController@index']);
+        $router->post('/', ['as' => 'store', 'uses' => 'UserController@store']);
+        $router->get('/{user}', ['as' => 'show', 'uses' => 'UserController@show']);
+        $router->patch('/{user}', ['as' => 'update', 'uses' => 'UserController@update']);
+        $router->patch('/{user}/password', ['as' => 'update-password', 'uses' => 'UserController@updatePassword']);
+        $router->post('/export', ['as' => 'export', 'uses' => 'UserController@export']);
+        $router->post('/import', ['as' => 'import', 'uses' => 'UserController@import']);
+        $router->delete('/{user}', ['as' => 'destroy', 'uses' => 'UserController@destroy']);
     });
 
     $router->group(['prefix' => 'actoGrado', "as" => "acto-grado"], function () use ($router) {

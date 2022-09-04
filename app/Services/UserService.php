@@ -72,6 +72,17 @@ class UserService
 
     /**
      * @param $user
+     * @param $data
+     *
+     * @return string
+     */
+    public function updatePassword($user, $data) : string
+    {
+        return $this->request('PATCH', "/api/user/{$user}/password", $data);
+    }
+
+    /**
+     * @param $user
      *
      * @return string
      */
@@ -79,4 +90,26 @@ class UserService
     {
         return $this->request('DELETE', "/api/user/{$user}");
     }
+
+     /**
+     * @param $user
+     *
+     * @return string
+     */
+    public function importUser($data) : string
+    {
+        return $this->request('POST', "/api/user/import", $data);
+    }
+    
+     /**
+     * @param $user
+     *
+     * @return string
+     */
+    public function exportUser($data) : string
+    {
+        return $this->request('POST', "/api/user/export", $data);
+    }
+
 }
+
