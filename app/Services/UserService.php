@@ -5,6 +5,7 @@ declare(strict_types = 1);
 namespace App\Services;
 
 use App\Traits\RequestService;
+use Illuminate\Http\Request;
 
 use function config;
 
@@ -96,7 +97,7 @@ class UserService
      *
      * @return string
      */
-    public function importUser($data) : string
+    public function importUser( $data) : string
     {
         return $this->request('POST', "/api/user/import", $data);
     }
