@@ -35,9 +35,9 @@ class UserService
     /**
      * @return string
      */
-    public function fetchUsers() : string
+    public function fetchUsers($data) : string
     {
-        return $this->request('GET', '/api/user');
+        return $this->request('POST', '/api/user', $data);
     }
 
     /**
@@ -57,7 +57,7 @@ class UserService
      */
     public function createUser($data) : string
     {
-        return $this->request('POST', '/api/user', $data);
+        return $this->request('POST', '/api/user/store', $data);
     }
 
     /**

@@ -32,20 +32,27 @@ class AuthController extends Controller
     public function __construct(userService $userService)
     {
         $this->userService = $userService;
-        $this->middleware('auth:api', ['only' => ['me', 'logout', "refresh"]]);
+        $this->middleware('auth:api', ['only' => ['me', 'logout', "refresh","register"]]);
     }
 
     public function register(Request $request)
     {
         $rules = [
                 'correo' => 'required|email|unique:users,email',
+                'cedula' => 'required|string|unique:users,cedula',
                 'password' => 'required|string',
                 'password_confirm' => 'required|same:password|string',
         ];
 
         $this->validate($request, $rules);
 
-        $userService = $this->userService->createUser($request->all());
+        if($request->is_admin){
+            $userService = $this->userService->createUser($request->all());            
+        }else{
+            $userService = $this->egresadoService->createEgresado($request->all());
+        }
+
+        dd($userService);
 
         if(!empty($userService)){
             $user = User::create([
@@ -67,7 +74,7 @@ class AuthController extends Controller
     {
         $rules = [
             'email' => 'required|email',
-            'password' => 'required|string|min:6',
+            'password' => 'required|string',
         ];
 
         $this->validate($request, $rules);
@@ -146,7 +153,7 @@ class AuthController extends Controller
     public function forgotPassword(Request $request)
     {
         $rules = [
-            'email' => 'required|string|email|max:255|exists:users,email',
+            'email' => 'required|email|exists:users,email',
             "url"=>"required|url"
         ];
         
@@ -163,7 +170,7 @@ class AuthController extends Controller
         }
 
         $t = JWTAuth::setToken($token);
-        $url = $request->url."?token=". $token;
+        $url = $request->url."/". $token;
         $value = JWTAuth::setToken($token)->getPayload()->get('exp');
         $expiration = Carbon::parse($value)->format('d-m-y H:i') . " UTC";
         
@@ -189,25 +196,43 @@ class AuthController extends Controller
             JWTAuth::setToken($request->token_reset);
             $token = JWTAuth::getToken();
             $user = JWTAuth::toUser($token);
+            $user = User::where("id", $user->id)->first();
+            if ($user) {
+                $user->update([
+                    'password' =>  Hash::make($request->password),
+                ]);
+                
+                JWTAuth::invalidate($token);
+                try {
+                    event(new PasswordResetEvent($user));
+                } catch (\Throwable$th) {
+
+                }
+                $credentials = ["email" => $user->email, "password" => $request->password];
+                $token = Auth::guard('api')->attempt($credentials);
+                return response()->json(['message' => __("Success")]);
+            } else {
+                JWTAuth::invalidate($token);
+                return response()->json(['error' => __("The user does not exist")], 401);
+            }
         } catch (\Throwable$th) {
             return response()->json(['error' => __("Token has expired")], 401);
         }
-        if (User::where("id", $user->id)->exists()) {
-            $user->update([
-                'password' =>  Hash::make($request->password),
-            ]);
-            JWTAuth::invalidate($token);
-            try {
-                event(new PasswordResetEvent($user));
-            } catch (\Throwable$th) {
+    }
 
-            }
-            $credentials = ["email" => $user->email, "password" => $request->password];
-            $token = Auth::guard('api')->attempt($credentials);
-            return $this->respondWithTokenAndUser($token, $user, $user->roles);
-        } else {
-            JWTAuth::invalidate($token);
-            return response()->json(['error' => __("The user does not exist")], 401);
-        }
+    public function changePassword(Request $request)
+    {
+        $rules = [
+            'password' => 'required|string',
+            'password_confirmation' => 'required|same:password|string',
+        ];  
+
+        $this->validate($request, $rules);
+
+        $user = User::where("cedula", $request->id)->orWhere("email", $request->id)->first();
+        $user->update([
+            'password' =>  Hash::make($request->password),
+        ]);
+        return response()->json(['message' => __("success")]);
     }
 }

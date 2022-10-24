@@ -37,6 +37,7 @@ $router->group(['prefix' => 'api/auth', "as" => "auth"], function ($router) {
     $router->post('me', ['as' => 'me', 'uses' => 'AuthController@me']);
     $router->post('forgot-password', ['as' => 'forgot-password', 'uses' => 'AuthController@forgotPassword']);
     $router->post('reset-password', ['as' => 'reset-password', 'uses' => 'AuthController@resetPassword']);
+    $router->post('change-password', ['as' => 'change-password', 'uses' => 'AuthController@changePassword']);
 });
     
 $router->group(['prefix' => 'api', 'middleware' => ['auth.jwt', 'can_use_route']], function () use ($router) {
@@ -110,6 +111,7 @@ $router->group(['prefix' => 'api', 'middleware' => ['auth.jwt', 'can_use_route']
     $router->group(['prefix' => 'egresado', "as" => "egresado"], function () use ($router) {
         $router->get('/', ['as' => 'index', 'uses' => 'EgresadoController@index']);
         $router->post('/', ['as' => 'store', 'uses' => 'EgresadoController@store']);
+        $router->post('/change-notification-status', ['as' => 'change-notification-status', 'uses' => 'EgresadoController@changeNotificationStatus']);
         $router->get('/{egresado}', ['as' => 'show', 'uses' => 'EgresadoController@show']);
         $router->patch('/{egresado}', ['as' => 'update', 'uses' => 'EgresadoController@update']);
         $router->delete('/{egresado}', ['as' => 'destroy', 'uses' => 'EgresadoController@destroy']);

@@ -37,25 +37,4 @@ trait RequestService
 
         return $response->getBody()->getContents();
     }
-
-    public function requestFile($method, $requestUrl,Request $request, $headers = []) : string
-    {
-        $client = new Client([
-            'base_uri' => $this->baseUri
-        ]);
-
-        if (isset($this->secret)) {
-            $headers['Authorization'] = $this->secret;
-        }
-
-        $response = $client->request($method, $requestUrl,
-            [
-                'headers' => $headers,
-                'form_params'=>$request->all()
-                
-            ]
-        );
-
-        return $response->getBody()->getContents();
-    }
 }

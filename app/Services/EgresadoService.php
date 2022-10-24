@@ -34,9 +34,9 @@ class EgresadoService
     /**
      * @return string
      */
-    public function fetchEgresados() : string
+    public function fetchEgresados($data) : string
     {
-        return $this->request('GET', '/api/egresado');
+        return $this->request('POST', '/api/egresado', $data);
     }
 
     /**
@@ -56,7 +56,12 @@ class EgresadoService
      */
     public function createEgresado($data) : string
     {
-        return $this->request('POST', '/api/egresado', $data);
+        return $this->request('POST', '/api/egresado/store', $data);
+    }
+
+    public function changeNotificationStatus($data) : string
+    {
+        return $this->request('POST', "/api/egresado/change-notification-status",$data);
     }
 
     /**
@@ -79,4 +84,8 @@ class EgresadoService
     {
         return $this->request('DELETE', "/api/egresado/{$egresado}");
     }
+
+    
+
+    
 }

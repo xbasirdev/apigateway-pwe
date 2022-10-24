@@ -27,7 +27,6 @@ class UserController extends Controller
     public function __construct(userService $userService)
     {
         $this->userService = $userService;
-        $this->middleware('auth:api');
     }
 
     /**
@@ -35,7 +34,11 @@ class UserController extends Controller
      */
     public function index()
     {
-        return $this->successResponse($this->userService->fetchUsers());
+        $users = User::whereHas('roles', function ($q) {
+            return $q->where('slug', 'administrator');
+        })->pluck("cedula")->toArray();
+
+        return $this->successResponse($this->userService->fetchUsers(["users"=>$users]));
     }
 
     /**
@@ -48,33 +51,6 @@ class UserController extends Controller
         return $this->successResponse($this->userService->fetchUser($user));
     }
 
-    /**
-     * @param \Illuminate\Http\Request $request
-     *
-     * @return mixed
-     */
-    public function store(Request $request)
-    {
-        $rules = [
-            'correo' => 'required|email|unique:users,email',
-            'password' => 'required|string',
-            'password_confirm' => 'required|same:password|string',
-        ];
-
-        $this->validate($request, $rules);
-
-        $userService = $this->userService->createUser($request->all());
-
-        if (!empty($userService)) {
-            $user = User::create([
-                'name' => $request->nombres . " " . $request->apellidos,
-                'email' => $request->correo,
-                'password' => Hash::make($request->password),
-            ]);
-        }
-
-        return $this->successResponse($this->userService->createUser($request->all()));
-    }
 
     /**
      * @param \Illuminate\Http\Request $request
