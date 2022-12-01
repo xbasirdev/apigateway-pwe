@@ -111,6 +111,21 @@ class UserService
     {
         return $this->request('POST', "/api/user/export", $data);
     }
+    
+         /**
+     * @param $user
+     *
+     * @return string
+     */
+    public function updateUserProfile($data) : string
+    {
+        return $this->request('POST', "/api/user/profile/update", $data);
+    }
 
+    
+    public function fetchProfile($data) : string
+    {
+        return $this->request('Get', '/api/user/profile', $data);
+    }
 }
 

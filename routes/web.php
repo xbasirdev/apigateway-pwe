@@ -52,10 +52,11 @@ $router->group(['prefix' => 'api', 'middleware' => ['auth.jwt', 'can_use_route']
 
     $router->group(['prefix' => 'user', 'as' => "user"], function () use ($router) {
         $router->get('/', ['as' => 'index', 'uses' => 'UserController@index']);
-        $router->post('/', ['as' => 'store', 'uses' => 'UserController@store']);
         $router->get('/{user}', ['as' => 'show', 'uses' => 'UserController@show']);
+        $router->post('/', ['as' => 'store', 'uses' => 'UserController@store']);
         $router->patch('/{user}', ['as' => 'update', 'uses' => 'UserController@update']);
         $router->patch('/{user}/password', ['as' => 'update-password', 'uses' => 'UserController@updatePassword']);
+        $router->patch('/{user}/update-role', ['as' => 'update-role', 'uses' => 'UserController@updateRole']);
         $router->post('/export', ['as' => 'export', 'uses' => 'UserController@export']);
         $router->post('/import', ['as' => 'import', 'uses' => 'UserController@import']);
         $router->delete('/{user}', ['as' => 'destroy', 'uses' => 'UserController@destroy']);
@@ -110,11 +111,7 @@ $router->group(['prefix' => 'api', 'middleware' => ['auth.jwt', 'can_use_route']
 
     $router->group(['prefix' => 'egresado', "as" => "egresado"], function () use ($router) {
         $router->get('/', ['as' => 'index', 'uses' => 'EgresadoController@index']);
-        $router->post('/', ['as' => 'store', 'uses' => 'EgresadoController@store']);
         $router->post('/change-notification-status', ['as' => 'change-notification-status', 'uses' => 'EgresadoController@changeNotificationStatus']);
-        $router->get('/{egresado}', ['as' => 'show', 'uses' => 'EgresadoController@show']);
-        $router->patch('/{egresado}', ['as' => 'update', 'uses' => 'EgresadoController@update']);
-        $router->delete('/{egresado}', ['as' => 'destroy', 'uses' => 'EgresadoController@destroy']);
     });
 
     $router->group(['prefix' => 'bolsaEgresado', "as" => "bolsa-egresado"], function () use ($router) {

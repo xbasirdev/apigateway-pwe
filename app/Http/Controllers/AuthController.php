@@ -35,36 +35,6 @@ class AuthController extends Controller
         $this->middleware('auth:api', ['only' => ['me', 'logout', "refresh","register"]]);
     }
 
-    public function register(Request $request)
-    {
-        $rules = [
-                'correo' => 'required|email|unique:users,email',
-                'cedula' => 'required|string|unique:users,cedula',
-                'password' => 'required|string',
-                'password_confirm' => 'required|same:password|string',
-        ];
-
-        $this->validate($request, $rules);
-
-        if($request->is_admin){
-            $userService = $this->userService->createUser($request->all());            
-        }else{
-            $userService = $this->egresadoService->createEgresado($request->all());
-        }
-
-        dd($userService);
-
-        if(!empty($userService)){
-            $user = User::create([
-                'name' => $request->nombres ." ". $request->apellidos,
-                'email'=> $request->correo,
-                'password'=> Hash::make($request->password),
-            ]);
-        }
-        
-       return $this->successResponse($user);
-    }
-
     /**
      * Get a JWT via given credentials.
      *

@@ -4,7 +4,7 @@ Api Gateway
 
 Crear la base de datos en mysql con el nombre 'lu-ms1-api_gateway'
 
-Correr elcomando "copy .env.example .env"
+Correr elcomando "cp .env.example .env"
 
 Configurar el archivo .env del proyecto
 

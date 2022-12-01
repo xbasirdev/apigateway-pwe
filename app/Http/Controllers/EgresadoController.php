@@ -35,37 +35,6 @@ class EgresadoController extends Controller
         return $this->successResponse($this->egresadoService->fetchEgresados(["users"=>$users]));
     }
 
-    /**
-     * @param $egresado
-     *
-     * @return mixed
-     */
-    public function show($egresado)
-    {
-        return $this->successResponse($this->egresadoService->fetchEgresado($egresado));
-    }
-
-    /**
-     * @param \Illuminate\Http\Request $request
-     * @param                          $egresado
-     *
-     * @return mixed
-     */
-    public function update(Request $request, $egresado)
-    {
-        return $this->successResponse($this->egresadoService->updateEgresado($egresado, $request->all()));
-    }
-
-    /**
-     * @param $egresado
-     *
-     * @return mixed
-     */
-    public function destroy($egresado)
-    {
-        return $this->successResponse($this->egresadoService->deleteEgresado($egresado));
-    }
-
     public function changeNotificationStatus(Request $request)
     {
         $rules = [
