@@ -111,7 +111,7 @@ class UserController extends Controller
         $request["user"] = $user_guard->cedula;
         $user = User::where(["cedula" => $user])->first();
         
-        if($request->form_type == "administrator"){
+        if($request->form_type == "administrator" || $request->form_type == "graduate"){
             $rules = [
                 "nombres"=>"required|string",
                 "apellidos"=>"required|string",
@@ -139,9 +139,10 @@ class UserController extends Controller
         }
 
         $this->validate($request, $rules);
+        
         $request["role"]= $user_guard->hasRole('administrator') ? "administrator" : "graduate";  
         $userService = $this->userService->updateUser($user->cedula, $request->all()); 
-        return $userService;
+        
         if($user->hasRole('administrator') && !empty($userService) && $request->form_type != "profile") {
             $user->update([
                 'name' => $request->nombres . " " . $request->apellidos,
