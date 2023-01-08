@@ -49,6 +49,11 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
         return [];
     }
 
+    public function setCedulaAttribute($cedula)
+    {
+        $this->attributes['cedula']= strtoupper($cedula);
+    }
+
     /**
      * Return all user roles.
      *
