@@ -264,13 +264,13 @@ class UserController extends Controller
                 if($value["new_user"]){
                     $user->assignRole($role);   
                 }else{
-                    if($value["change_rol"]){
+                    if(!empty($value["change_rol"]) && $value["change_rol"]){
                         $user->revokeAllRoles();
                         $user->assignRole($role);
                     }
                 }
             }
-            return $this->successResponse("Archivo importado correctamente");    
+            return $this->successResponse(["message"=>"Archivo importado correctamente"]);    
         }
         return $this->successResponse($response);
     }
