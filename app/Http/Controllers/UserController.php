@@ -68,7 +68,7 @@ class UserController extends Controller
         $rules = [
             "nombres"=>"required|string",
             "apellidos"=>"required|string",
-            "telefono"=>array("nullable","string","regex:/0(2(12|3[4589]|4[0-9]|[5-8][1-9]|9[1-5])|(4(12|14|16|24|26)))-?[0-9]{7}$/"),
+            "telefono"=>array("nullable","string" ),
             'correo' => 'required|email|unique:users,email',
             'cedula' => array('required','string','unique:users,cedula','regex:/[VvEe]-[0-9]{6,}$/'),
             'password' => 'required|string',
@@ -115,7 +115,7 @@ class UserController extends Controller
             $rules = [
                 "nombres"=>"required|string",
                 "apellidos"=>"required|string",
-                "telefono"=>array("nullable","string","regex:/0(2(12|3[4589]|4[0-9]|[5-8][1-9]|9[1-5])|(4(12|14|16|24|26)))-?[0-9]{7}$/"),
+                "telefono"=>array("nullable","string" ),
                 'correo' => 'required|email|unique:users,email,'.$user->id,
                 'cedula' => array('required','string','unique:users,cedula,'.$user->id, 'regex:/[VvEe]-[0-9]{6,}$/'),
                 "form_type"=>"required"
@@ -123,7 +123,7 @@ class UserController extends Controller
         }
 
         if($request->form_type == "profile"){
-            $rules = ["telefono"=>array("nullable","string","regex:/0(2(12|3[4589]|4[0-9]|[5-8][1-9]|9[1-5])|(4(12|14|16|24|26)))-?[0-9]{7}$/")];
+            $rules = ["telefono"=>array("nullable","string" )];
             if( !$user_guard->hasRole('administrator')){
                 $rules+= ["correo_personal"=>"nullable|email"];
             }
