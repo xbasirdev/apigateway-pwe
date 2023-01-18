@@ -38,7 +38,10 @@ class RolePermissionTableSeeder extends Seeder
             "route:egresado.store",
             "route:egresado.update",
             "route:cuestionario.index",
-            "route:cuestionario.store"
+            "route:cuestionario.store",
+            "route:carrera.index",
+            "route:user.show",
+            "route:egresado.change-notification-status"
         ];
 
         //crear permisos segun las rutas encontradas
