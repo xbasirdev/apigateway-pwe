@@ -70,4 +70,30 @@ class CuestionarioController extends Controller
     {
         return $this->successResponse($this->cuestionarioService->deleteCuestionario($cuestionario));
     }
+
+    public function exportR(Request $request, $cuestionario)
+    {
+        $rules = [
+            'base_format' => 'required',
+        ];
+        $this->validate($request, $rules);
+        $service = $this->cuestionarioService->exportR($cuestionario, $request->all());
+        return $this->successResponse($service);
+    }
+
+    public function exportD(Request $request, $cuestionario)
+    {
+        $rules = [
+            'base_format' => 'required',
+            'total'=>'required|integer',
+            'total_dia'=>'required|integer',
+            'total_mes'=>'required|integer',
+        ];
+        $this->validate($request, $rules);
+        $service = $this->cuestionarioService->exportD($cuestionario, $request->all());
+        return $this->successResponse($service);
+    }
 }
+
+
+

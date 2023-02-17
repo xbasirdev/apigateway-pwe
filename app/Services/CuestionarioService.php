@@ -79,4 +79,14 @@ class CuestionarioService
     {
         return $this->request('DELETE', "/api/cuestionario/{$cuestionario}");
     }
+
+    public function exportR($cuestionario, $data) : string
+    {
+        return $this->request('POST', "/api/cuestionario/export-r/{$cuestionario}", $data);
+    }
+
+    public function exportD($cuestionario, $data) : string
+    {
+        return $this->request('POST', "/api/cuestionario/export-d/{$cuestionario}", $data);
+    }
 }

@@ -128,6 +128,8 @@ $router->group(['prefix' => 'api', 'middleware' => ['auth.jwt', 'can_use_route']
         $router->get('/{cuestionario}', ['as' => 'show', 'uses' => 'CuestionarioController@show']);
         $router->patch('/{cuestionario}', ['as' => 'update', 'uses' => 'CuestionarioController@update']);
         $router->delete('/{cuestionario}', ['as' => 'destroy', 'uses' => 'CuestionarioController@destroy']);
+        $router->post('/export-d/{cuestionario}', ['as' => 'export-r', 'uses' => 'CuestionarioController@exportD']);
+        $router->post('/export-r/{cuestionario}', ['as' => 'export-d', 'uses' => 'CuestionarioController@exportR']);
     });
 
     $router->group(['prefix' => 'banco', "as" => "banco"], function () use ($router) {
