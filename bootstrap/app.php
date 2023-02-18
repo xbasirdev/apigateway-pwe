@@ -44,8 +44,7 @@ $app->alias('mail.manager', Illuminate\Contracts\Mail\Factory::class);
 $app->alias('mailer', Illuminate\Mail\Mailer::class);
 $app->alias('mailer', Illuminate\Contracts\Mail\Mailer::class);
 $app->alias('mailer', Illuminate\Contracts\Mail\MailQueue::class);
-class_alias(Tymon\JWTAuth\Facades\JWTAuth::class, 'JWTAuth');
-class_alias(Tymon\JWTAuth\Facades\JWTFactory::class, 'JWTFactory');
+
 
 /*
 |--------------------------------------------------------------------------
