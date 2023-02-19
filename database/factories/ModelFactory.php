@@ -12,3 +12,16 @@ declare(strict_types = 1);
 | database. Just tell the factory how a default model should look.
 |
 */
+
+
+use Faker\Generator as Faker;
+use Illuminate\Support\Facades\Hash;
+
+$factory->define(App\Models\User::class, function (Faker $faker) {
+    return [
+        'name' => $faker->name,
+        'email' => $faker->safeEmail,
+        'password' => Hash::make("123"),
+        "cedula" => str_random(10),
+    ];
+});

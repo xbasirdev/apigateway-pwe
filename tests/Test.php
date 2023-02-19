@@ -3,14 +3,14 @@
 use Laravel\Lumen\Testing\DatabaseMigrations;
 use Laravel\Lumen\Testing\DatabaseTransactions;
 
-class ExampleTest extends TestCase
+class RegisterTest extends TestCase
 {
     /**
      * A basic test example.
      *
      * @return void
      */
-    public function testExample()
+    public function register()
     {
         $this->get('/');
 
